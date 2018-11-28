@@ -2,59 +2,80 @@ package com.orderAPI
 
 import java.sql.Timestamp
 
-import akka.actor.{Actor, ActorLogging, Props}
+import akka.actor.{Actor, ActorLogging, ActorSystem, Props}
 import akka.http.scaladsl.model._
 import akka.http.scaladsl.Http
-import akka.stream.ActorMaterializer
+import akka.stream.{ActorMaterializer, Materializer}
 import spray.json._
 
-import scala.concurrent.Future
-import scala.util.Success
-import scala.util.Failure
-
-
-final case class Price(price:Int)
-final case class Prices(prices:Seq[Price])
-
+import scala.concurrent.duration.FiniteDuration
+import scala.concurrent.{ExecutionContext, Future}
+import scala.util.{Failure, Success, Try}
+import scala.concurrent.duration._
+import akka.pattern._
 
 class PriceRegistryActor extends Actor with ActorLogging with Protocols {
 
   import PriceRegistryActor._
+
   implicit val system = context.system
   implicit val executionContext = context.dispatcher
   implicit val materializer: ActorMaterializer = ActorMaterializer()
 
+  private def getUrlAkka[T](url: String, timeout: FiniteDuration = 15 seconds)(implicit parser: String => Option[T], system: ActorSystem, materializer: Materializer): Future[Option[T]] = {
+    Http().singleRequest(HttpRequest(uri = url)).flatMap(resp => {
+      if (resp.status.isFailure()) {
+        Future.successful(None)
+      } else {
+        val bodyF = resp.entity.toStrict(timeout) map {_.data} map { _.utf8String }
+        bodyF.map(body => parser(body))
+      }
+    })
+  }
+
+  private def getCrypto(crypto: String)(implicit system: ActorSystem, materializer: Materializer, execution: ExecutionContext): Future[Option[BittrexPrices]] = {
+    val url = baseurl + marketurl + "USD-" + crypto
+    log.info("getting crypto prices= "+url)
+    implicit val transformer: String => Option[BittrexPrices] =
+      result => { Try(result.parseJson.convertTo[BittrexPrices]).toOption }
+    getUrlAkka(url) recover { case _ => None }
+  }
+
+  private def getCurrency(currency: String)(implicit system: ActorSystem, materializer: Materializer, execution: ExecutionContext): Future[Option[Rate]] = {
+    val url = fixerbaseURL + "?access_key=" + fixerAccessKey + "&base=" + currency + "&symbols=" + "USD"
+    log.info("getting eur usd rate= "+url)
+    implicit val transformer: String => Option[Rate]=
+      result => { Try(result.parseJson.convertTo[Rate]).toOption }
+    getUrlAkka(url) recover { case _ => None }
+  }
 
   def receive: Receive = {
     //Crypto = BTC or ETH
     //Currency = EUR
     case GetPrice(crypto, currency) =>
-      val currencyUSDrateQuery = fixerbaseURL +"?access_key=" + fixerAccessKey + "&base=" + currency +"&symbol=" + "USD"
-      val query = baseurl + marketurl + "USD-" + crypto
-      //val query = baseurl + priceurl + priceCoinUrl + crypto + priceCurrencyUrl + currency
 
-      Http ().singleRequest (HttpRequest (uri = currencyUSDrateQuery)) andThen{
-        case Success(resp) => {
-          (resp.entity.dataBytes.map(_.utf8String)).map(_.parseJson.convertTo[Rate]).runForeach{rate =>
-            Http ().singleRequest (HttpRequest (uri = query)) andThen{
-              case Success(ans) => {
-                (ans.entity.dataBytes.map(_.utf8String)).map(_.parseJson.convertTo[BittrexPrices]).runForeach{
-                  res => res.result.copy(ask = res.result.ask*rate.rates.usd, bid = res.result.bid*rate.rates.usd, latest = res.result.latest * rate.rates.usd)
-                }
-              }
-              case Failure(error) => Failure
+      val response = for {
+        cryptor <- getCrypto(crypto)
+        currencyr <- getCurrency(currency)
+      } yield { for{
+        a <- currencyr
+        b <- cryptor
+        _ = log.info(s"Latest ${b.result.Last}")
+        _ = log.info(s"Bid ${}")
+        _ = log.info(s"Ask ${b.result.Ask}")
+      } yield
+      b.copy(result = b.result.copy(
+              `Ask` = b.result.Ask * a.rates.USD,
+              `Bid` = b.result.Bid * a.rates.USD,
+              `Last` = b.result.Last * a.rates.USD))
             }
-          }
-        }
-        case Failure(exception) => Failure
-      }
-
+      response pipeTo sender()
   }
 }
 
 object PriceRegistryActor{
 
-  val baseurl = "https://bittrex.com/api/v1.1/public/"
+  val baseurl = "https://bittrex.com/api/v1.1/public/getticker"
   val fixerbaseURL = "http://data.fixer.io/api/latest"
   val marketurl = "?market="
   //val priceCoinUrl = "fsym="

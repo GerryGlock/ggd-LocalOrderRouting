@@ -18,8 +18,6 @@
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/gerardoglod/Documents/Scala/LocalOrderRouting/target/scala-2.12/classes/com/orderAPI[0m
 [0m[[0m[0mdebug[0m] [0m[0m	com/orderAPI/Consts$.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/gerardoglod/Documents/Scala/LocalOrderRouting/target/scala-2.12/classes/com/orderAPI/Consts$.class[0m
-[0m[[0m[0mdebug[0m] [0m[0m	com/orderAPI/PriceRegistryActor$$anonfun$receive$1$$anonfun$applyOrElse$7$$anonfun$$nestedInanonfun$applyOrElse$3$1.class[0m
-[0m[[0m[0mdebug[0m] [0m[0m	  /home/gerardoglod/Documents/Scala/LocalOrderRouting/target/scala-2.12/classes/com/orderAPI/PriceRegistryActor$$anonfun$receive$1$$anonfun$applyOrElse$7$$anonfun$$nestedInanonfun$applyOrElse$3$1.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	com/orderAPI/PriceRegistryActor$$anonfun$receive$1.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/gerardoglod/Documents/Scala/LocalOrderRouting/target/scala-2.12/classes/com/orderAPI/PriceRegistryActor$$anonfun$receive$1.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	com/orderAPI/BittrexPrices$.class[0m
@@ -46,10 +44,12 @@
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/gerardoglod/Documents/Scala/LocalOrderRouting/target/scala-2.12/classes/com/orderAPI/PriceRegistryActor$GetPrice$.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	com/orderAPI/PriceRoutes.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/gerardoglod/Documents/Scala/LocalOrderRouting/target/scala-2.12/classes/com/orderAPI/PriceRoutes.class[0m
-[0m[[0m[0mdebug[0m] [0m[0m	com/orderAPI/PriceRegistryActor$$anonfun$receive$1$$anonfun$applyOrElse$7.class[0m
-[0m[[0m[0mdebug[0m] [0m[0m	  /home/gerardoglod/Documents/Scala/LocalOrderRouting/target/scala-2.12/classes/com/orderAPI/PriceRegistryActor$$anonfun$receive$1$$anonfun$applyOrElse$7.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	com/orderAPI/PriceRegistryActor$$anonfun$com$orderAPI$PriceRegistryActor$$getCrypto$1.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /home/gerardoglod/Documents/Scala/LocalOrderRouting/target/scala-2.12/classes/com/orderAPI/PriceRegistryActor$$anonfun$com$orderAPI$PriceRegistryActor$$getCrypto$1.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	com/orderAPI/Prices$.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/gerardoglod/Documents/Scala/LocalOrderRouting/target/scala-2.12/classes/com/orderAPI/Prices$.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	com/orderAPI/PriceRegistryActor$$anonfun$com$orderAPI$PriceRegistryActor$$getCurrency$1.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /home/gerardoglod/Documents/Scala/LocalOrderRouting/target/scala-2.12/classes/com/orderAPI/PriceRegistryActor$$anonfun$com$orderAPI$PriceRegistryActor$$getCurrency$1.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	com/orderAPI/PriceRegistryActor$.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	  /home/gerardoglod/Documents/Scala/LocalOrderRouting/target/scala-2.12/classes/com/orderAPI/PriceRegistryActor$.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	com/orderAPI/BittrexResult$.class[0m
